@@ -1,0 +1,417 @@
+/* Grant List Styles */
+
+.grant-list-container {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e5e7eb;
+}
+
+.grant-list-container h2 {
+    margin: 0 0 20px 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.list-header h2 {
+    margin: 0;
+}
+
+.grant-count {
+    background: #dbeafe;
+    color: #1e40af;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.loading-state,
+.empty-state {
+    text-align: center;
+    padding: 48px 24px;
+}
+
+.loading-state .spinner,
+.empty-state .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #e5e7eb;
+    border-top: 4px solid #2563eb;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 16px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-state p,
+.empty-state p {
+    color: #6b7280;
+    margin: 0;
+}
+
+.empty-state .empty-icon {
+    font-size: 3rem;
+    margin-bottom: 12px;
+}
+
+.empty-state h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #374151;
+    margin: 12px 0 8px 0;
+}
+
+.empty-state p {
+    font-size: 0.95rem;
+}
+
+.grants-grid {
+    display: grid;
+    gap: 16px;
+}
+
+
+/* Grant Card */
+
+.grant-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    background: white;
+}
+
+.grant-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: #2563eb;
+}
+
+.grant-card.expanded {
+    box-shadow: 0 8px 16px rgba(37, 99, 235, 0.15);
+    border-color: #2563eb;
+}
+
+.grant-card-header {
+    padding: 16px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.grant-card.expanded .grant-card-header {
+    background: linear-gradient(135deg, #f0f9ff 0%, #f3e8ff 100%);
+    border-color: #bfdbfe;
+}
+
+.grant-info-mini {
+    flex: 1;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.grant-id {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+}
+
+.grant-amount {
+    text-align: right;
+    padding: 8px 12px;
+    background: #f3f4f6;
+    border-radius: 8px;
+    min-width: 80px;
+}
+
+.amount-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2563eb;
+}
+
+.amount-unit {
+    display: block;
+    font-size: 0.75rem;
+    color: #6b7280;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+
+/* Badge Styles */
+
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.badge-success {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge-warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.badge-info {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.grant-card-body {
+    padding: 16px;
+}
+
+.grant-field {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.grant-field:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.field-label {
+    font-weight: 500;
+    color: #6b7280;
+    font-size: 0.9rem;
+    min-width: 100px;
+}
+
+.field-value {
+    text-align: right;
+    color: #1f2937;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.field-value small {
+    display: block;
+    font-size: 0.8rem;
+    color: #9ca3af;
+    font-weight: normal;
+    margin-top: 2px;
+}
+
+
+/* Expanded Details */
+
+.grant-details-expanded {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.milestone-section {
+    margin-bottom: 16px;
+}
+
+.milestone-section h4 {
+    margin: 0 0 8px 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.milestone-indicator {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+}
+
+.milestone-indicator.approved {
+    background: #d1fae5;
+    border-color: #86efac;
+}
+
+.milestone-icon {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.milestone-indicator.approved .milestone-icon {
+    color: #059669;
+}
+
+.milestone-indicator.pending .milestone-icon {
+    color: #d97706;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.milestone-text {
+    font-weight: 500;
+    color: inherit;
+}
+
+.workflow-steps {
+    display: flex;
+    gap: 16px;
+    margin: 16px 0;
+}
+
+.step {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    background: #f9fafb;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    transition: all 0.3s;
+}
+
+.step.active {
+    background: #dbeafe;
+    border-color: #2563eb;
+}
+
+.step.completed {
+    background: #d1fae5;
+    border-color: #86efac;
+}
+
+.step-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid #e5e7eb;
+    font-weight: 700;
+    color: #6b7280;
+}
+
+.step.active .step-icon {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: white;
+}
+
+.step.completed .step-icon {
+    background: #059669;
+    border-color: #059669;
+    color: white;
+}
+
+.step-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #6b7280;
+    text-align: center;
+}
+
+.step.completed .step-label {
+    color: #059669;
+}
+
+.step.active .step-label {
+    color: #1e40af;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.action-buttons .btn {
+    flex: 1;
+}
+
+.grant-card-footer {
+    padding: 16px;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    gap: 8px;
+}
+
+.btn-sm {
+    padding: 8px 16px;
+    font-size: 0.875rem;
+}
+
+
+/* Mobile responsiveness */
+
+@media (max-width: 768px) {
+    .grant-list-container {
+        padding: 16px;
+    }
+    .grant-card-header {
+        flex-direction: column;
+    }
+    .grant-info-mini {
+        width: 100%;
+    }
+    .grant-amount {
+        width: 100%;
+        text-align: left;
+    }
+    .grant-field {
+        flex-direction: column;
+        gap: 4px;
+    }
+    .field-value {
+        text-align: left;
+    }
+    .workflow-steps {
+        flex-direction: column;
+    }
+    .action-buttons {
+        flex-direction: column;
+    }
+    .grant-card-footer {
+        flex-direction: column;
+    }
+}

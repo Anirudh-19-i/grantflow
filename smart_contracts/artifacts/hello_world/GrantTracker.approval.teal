@@ -1,0 +1,156 @@
+#pragma version 11
+#pragma typetrack false
+
+// algopy.arc4.ARC4Contract.approval_program() -> uint64:
+main:
+    intcblock 0 1
+    bytecblock "milestone_approved" "sponsor" "student_team" "grant_amount"
+    // smart_contracts/hello_world/contract.py:4
+    // class GrantTracker(arc4.ARC4Contract):
+    txn OnCompletion
+    !
+    assert
+    txn ApplicationID
+    bz main_create_NoOp@6
+    pushbytess 0xa9a0077f 0x78cfd3f1 // method "approve_milestone()void", method "claim_funds()void"
+    txna ApplicationArgs 0
+    match approve_milestone claim_funds
+    err
+
+main_create_NoOp@6:
+    // smart_contracts/hello_world/contract.py:4
+    // class GrantTracker(arc4.ARC4Contract):
+    pushbytes 0xccdbd60c // method "create_application(address,uint64)void"
+    txna ApplicationArgs 0
+    match create_application
+    err
+
+
+// smart_contracts.hello_world.contract.GrantTracker.create_application[routing]() -> void:
+create_application:
+    // smart_contracts/hello_world/contract.py:11-12
+    // # 1. Initialize the Grant
+    // @arc4.abimethod(allow_actions=["NoOp"], create="require")
+    txna ApplicationArgs 1
+    dup
+    len
+    pushint 32
+    ==
+    assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>
+    txna ApplicationArgs 2
+    dup
+    len
+    pushint 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    // smart_contracts/hello_world/contract.py:14
+    // self.sponsor = Txn.sender # The person deploying the contract is the sponsor
+    bytec_1 // "sponsor"
+    txn Sender
+    app_global_put
+    // smart_contracts/hello_world/contract.py:15
+    // self.student_team = student_team
+    bytec_2 // "student_team"
+    uncover 2
+    app_global_put
+    // smart_contracts/hello_world/contract.py:16
+    // self.grant_amount = grant_amount
+    bytec_3 // "grant_amount"
+    swap
+    app_global_put
+    // smart_contracts/hello_world/contract.py:17
+    // self.milestone_approved = False
+    bytec_0 // "milestone_approved"
+    intc_0 // 0
+    app_global_put
+    // smart_contracts/hello_world/contract.py:11-12
+    // # 1. Initialize the Grant
+    // @arc4.abimethod(allow_actions=["NoOp"], create="require")
+    intc_1 // 1
+    return
+
+
+// smart_contracts.hello_world.contract.GrantTracker.approve_milestone[routing]() -> void:
+approve_milestone:
+    // smart_contracts/hello_world/contract.py:22-23
+    // # Security check: Only the sponsor can approve!
+    // assert Txn.sender == self.sponsor, "Only the sponsor can approve milestones."
+    txn Sender
+    intc_0 // 0
+    bytec_1 // "sponsor"
+    app_global_get_ex
+    assert // check self.sponsor exists
+    ==
+    assert // Only the sponsor can approve milestones.
+    // smart_contracts/hello_world/contract.py:24
+    // self.milestone_approved = True
+    bytec_0 // "milestone_approved"
+    intc_1 // 1
+    app_global_put
+    // smart_contracts/hello_world/contract.py:19-20
+    // # 2. Sponsor Approves the Milestone
+    // @arc4.abimethod
+    intc_1 // 1
+    return
+
+
+// smart_contracts.hello_world.contract.GrantTracker.claim_funds[routing]() -> void:
+claim_funds:
+    // smart_contracts/hello_world/contract.py:29-30
+    // # Security checks
+    // assert Txn.sender == self.student_team, "Only the student team can claim funds."
+    txn Sender
+    intc_0 // 0
+    bytec_2 // "student_team"
+    app_global_get_ex
+    assert // check self.student_team exists
+    swap
+    dig 1
+    ==
+    assert // Only the student team can claim funds.
+    // smart_contracts/hello_world/contract.py:31
+    // assert self.milestone_approved, "The milestone has not been approved yet."
+    intc_0 // 0
+    bytec_0 // "milestone_approved"
+    app_global_get_ex
+    assert // check self.milestone_approved exists
+    assert // The milestone has not been approved yet.
+    // smart_contracts/hello_world/contract.py:33-38
+    // # Release the Algos to the student team via an Inner Transaction
+    // itxn.Payment(
+    //     receiver=self.student_team,
+    //     amount=self.grant_amount,
+    //     fee=0 # The caller (student) covers the tiny transaction fee
+    // ).submit()
+    itxn_begin
+    // smart_contracts/hello_world/contract.py:36
+    // amount=self.grant_amount,
+    intc_0 // 0
+    bytec_3 // "grant_amount"
+    app_global_get_ex
+    assert // check self.grant_amount exists
+    itxn_field Amount
+    itxn_field Receiver
+    // smart_contracts/hello_world/contract.py:33-34
+    // # Release the Algos to the student team via an Inner Transaction
+    // itxn.Payment(
+    intc_1 // pay
+    itxn_field TypeEnum
+    // smart_contracts/hello_world/contract.py:37
+    // fee=0 # The caller (student) covers the tiny transaction fee
+    intc_0 // 0
+    itxn_field Fee
+    // smart_contracts/hello_world/contract.py:33-38
+    // # Release the Algos to the student team via an Inner Transaction
+    // itxn.Payment(
+    //     receiver=self.student_team,
+    //     amount=self.grant_amount,
+    //     fee=0 # The caller (student) covers the tiny transaction fee
+    // ).submit()
+    itxn_submit
+    // smart_contracts/hello_world/contract.py:26-27
+    // # 3. Student Team Claims the Funds
+    // @arc4.abimethod
+    intc_1 // 1
+    return
