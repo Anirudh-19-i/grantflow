@@ -1,0 +1,32 @@
+{
+  "name": "grantflow-dashboard",
+  "version": "1.0.0",
+  "description": "GrantFlow — Transparent Fund Tracking Dashboard",
+  "private": true,
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 3000",
+    "start": "python -m http.server 3000",
+    "serve": "python serve_frontend.py",
+    "build": "echo 'Static HTML application - no build required'",
+    "preview": "python -m http.server 3000"
+  },
+  "keywords": [
+    "algorand",
+    "grants",
+    "fund-tracking",
+    "blockchain",
+    "dashboard"
+  ],
+  "author": "GrantFlow Team",
+  "license": "MIT",
+  "engines": {
+    "node": "18.x",
+    "npm": "9.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/algoint.git"
+  },
+  "homepage": "https://grantflow.example.com"
+}

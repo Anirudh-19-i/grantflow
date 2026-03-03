@@ -1,0 +1,56 @@
+# Vercel Build Ignore File
+# Prevents unnecessary files from being deployed
+
+# Python
+__pycache__/
+*.py
+*.pyc
+*.pyo
+*.egg-info/
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+htmlcov/
+*.egg
+.env.local
+.env.*.local
+
+# Smart Contracts (not needed on frontend)
+smart_contracts/
+test_*.py
+*.teal
+*.arc56.json
+
+# Development
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+node_modules/
+
+# Git
+.git/
+.github/
+
+# Environment
+.env
+!.env.example
+
+# Build
+dist/
+build/
+*.log
+
+# OS
+Thumbs.db
+.DS_Store

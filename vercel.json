@@ -1,0 +1,53 @@
+{
+  "version": 2,
+  "name": "grantflow",
+  "buildCommand": "echo 'Static HTML - no build needed'",
+  "public": false,
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "env": [
+    "VITE_APP_ID",
+    "VITE_ALGORAND_SERVER",
+    "VITE_ALGORAND_PORT",
+    "VITE_ALGORAND_INDEXER_SERVER",
+    "VITE_ALGORAND_INDEXER_PORT"
+  ],
+  "builds": [
+    {
+      "src": "frontend/index.html",
+      "use": "@vercel/static",
+      "config": {
+        "zeroConfig": true
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/index.html",
+      "status": 200
+    },
+    {
+      "src": "/(.*)",
+      "dest": "frontend/index.html"
+    }
+  ],
+  "ignore": [
+    ".git",
+    ".venv",
+    "__pycache__",
+    "*.pyc",
+    "node_modules",
+    ".env.local",
+    ".env.*.local",
+    "smart_contracts",
+    "test_*.py",
+    "poetry.lock",
+    "pyproject.toml"
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/frontend/$1"
+    }
+  ]
+}
