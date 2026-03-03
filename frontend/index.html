@@ -1,0 +1,2335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GrantFlow — Transparent Fund Tracking</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <style>
+         :root {
+            --cream: #faf8f4;
+            --white: #fff;
+            --blue-light: #d0e8f8;
+            --blue: #4a9edd;
+            --blue-deep: #2d7fc4;
+            --mint: #d6f0ea;
+            --mint-dark: #3cb89a;
+            --gold: #e8c96a;
+            --amber: #b8960a;
+            --violet: #7c6fe0;
+            --violet-light: rgba(124, 111, 224, 0.12);
+            --text: #1a2332;
+            --text-mid: #4a5568;
+            --text-soft: #8898a8;
+            --border: rgba(74, 158, 221, 0.18);
+            --glass: rgba(255, 255, 255, 0.65);
+            --glass-strong: rgba(255, 255, 255, 0.88);
+            --shadow: 0 8px 32px rgba(45, 127, 196, 0.10);
+            --shadow-lg: 0 20px 60px rgba(45, 127, 196, 0.15);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 10% 0%, rgba(208, 232, 248, 0.55) 0%, transparent 60%), radial-gradient(ellipse 60% 50% at 90% 30%, rgba(214, 240, 234, 0.45) 0%, transparent 55%), radial-gradient(ellipse 40% 40% at 50% 80%, rgba(232, 201, 106, 0.12) 0%, transparent 50%), var(--cream);
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        body>* {
+            position: relative;
+            z-index: 1;
+        }
+        /* ── LOGIN ── */
+        
+        #login-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        
+        .login-wrap {
+            width: 100%;
+            max-width: 900px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            background: var(--glass-strong);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(45, 127, 196, 0.18);
+        }
+        
+        .login-left {
+            padding: 52px 44px;
+            background: linear-gradient(145deg, rgba(208, 232, 248, 0.5), rgba(214, 240, 234, 0.35));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-right: 1px solid var(--border);
+        }
+        
+        .login-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 36px;
+        }
+        
+        .login-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--blue), var(--mint-dark));
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            font-size: 18px;
+        }
+        
+        .login-logo-text {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.5rem;
+            color: var(--text);
+        }
+        
+        .login-tagline {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.9rem;
+            line-height: 1.22;
+            color: var(--text);
+            margin-bottom: 16px;
+        }
+        
+        .login-tagline em {
+            font-style: italic;
+            color: var(--blue-deep);
+        }
+        
+        .login-desc {
+            font-size: 0.875rem;
+            color: var(--text-mid);
+            line-height: 1.7;
+            margin-bottom: 32px;
+            font-weight: 300;
+        }
+        
+        .login-features {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .login-feat {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.82rem;
+            color: var(--text-mid);
+        }
+        
+        .login-feat-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.7);
+            display: grid;
+            place-items: center;
+            font-size: 13px;
+            flex-shrink: 0;
+            border: 1px solid var(--border);
+        }
+        
+        .login-right {
+            padding: 52px 44px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .login-right h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.5rem;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+        
+        .login-right p {
+            font-size: 0.82rem;
+            color: var(--text-soft);
+            margin-bottom: 28px;
+        }
+        
+        .role-select {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        
+        .role-card {
+            padding: 16px;
+            border-radius: 14px;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        .role-card:hover {
+            border-color: var(--blue);
+            background: rgba(74, 158, 221, 0.05);
+        }
+        
+        .role-card.selected {
+            border-color: var(--blue-deep);
+            background: rgba(74, 158, 221, 0.1);
+            box-shadow: 0 0 0 3px rgba(74, 158, 221, 0.12);
+        }
+        
+        .role-card.selected.organizer {
+            border-color: var(--violet);
+            background: var(--violet-light);
+            box-shadow: 0 0 0 3px rgba(124, 111, 224, 0.1);
+        }
+        
+        .role-emoji {
+            font-size: 1.8rem;
+            margin-bottom: 6px;
+        }
+        
+        .role-name {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+        
+        .role-desc {
+            font-size: 0.72rem;
+            color: var(--text-soft);
+            margin-top: 2px;
+        }
+        
+        .form-row {
+            margin-bottom: 14px;
+        }
+        
+        .form-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-mid);
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 10px;
+            background: var(--glass-strong);
+            border: 1px solid var(--border);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text);
+            transition: all 0.2s;
+            outline: none;
+        }
+        
+        .form-input:focus {
+            border-color: rgba(74, 158, 221, 0.5);
+            box-shadow: 0 0 0 3px rgba(74, 158, 221, 0.1);
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--blue), var(--blue-deep));
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(74, 158, 221, 0.35);
+            transition: all 0.2s;
+            margin-top: 6px;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px rgba(74, 158, 221, 0.45);
+        }
+        
+        .login-btn.organizer-btn {
+            background: linear-gradient(135deg, var(--violet), #5b52d0);
+        }
+        
+        .login-btn.organizer-btn:hover {
+            box-shadow: 0 8px 24px rgba(124, 111, 224, 0.4);
+        }
+        
+        .login-error {
+            display: none;
+            font-size: 0.78rem;
+            color: #e05050;
+            padding: 8px 12px;
+            background: rgba(224, 80, 80, 0.08);
+            border: 1px solid rgba(224, 80, 80, 0.2);
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        
+        .demo-hint {
+            font-size: 0.72rem;
+            color: var(--text-soft);
+            margin-top: 14px;
+            text-align: center;
+            padding: 10px;
+            background: rgba(74, 158, 221, 0.05);
+            border-radius: 8px;
+            border: 1px dashed var(--border);
+        }
+        
+        .demo-hint strong {
+            color: var(--text-mid);
+        }
+        /* ── APP ── */
+        
+        #app-screen {
+            display: none;
+        }
+        
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 40px;
+            background: var(--glass-strong);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.4rem;
+            color: var(--text);
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            width: 34px;
+            height: 34px;
+            background: linear-gradient(135deg, var(--blue), var(--mint-dark));
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            font-size: 16px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .nav-link {
+            padding: 7px 16px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-mid);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            background: transparent;
+        }
+        
+        .nav-link:hover,
+        .nav-link.active {
+            background: var(--glass);
+            color: var(--blue-deep);
+            box-shadow: var(--shadow);
+        }
+        
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .role-pill {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+        
+        .role-pill.student {
+            background: rgba(59, 184, 154, 0.12);
+            color: var(--mint-dark);
+            border: 1px solid rgba(59, 184, 154, 0.3);
+        }
+        
+        .role-pill.organizer {
+            background: var(--violet-light);
+            color: var(--violet);
+            border: 1px solid rgba(124, 111, 224, 0.25);
+        }
+        
+        .role-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        .role-pill.student .role-dot {
+            background: var(--mint-dark);
+        }
+        
+        .role-pill.organizer .role-dot {
+            background: var(--violet);
+        }
+        
+        .nav-cta {
+            padding: 8px 20px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--blue), var(--blue-deep));
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(74, 158, 221, 0.35);
+            transition: all 0.2s;
+        }
+        
+        .nav-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(74, 158, 221, 0.45);
+        }
+        
+        .logout-btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-soft);
+            background: transparent;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(224, 80, 80, 0.06);
+            color: #e05050;
+            border-color: rgba(224, 80, 80, 0.2);
+        }
+        
+        .hero {
+            padding: 70px 40px 50px;
+            text-align: center;
+            max-width: 760px;
+            margin: 0 auto;
+        }
+        
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            border-radius: 20px;
+            background: var(--glass-strong);
+            border: 1px solid var(--border);
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--blue-deep);
+            margin-bottom: 22px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .hero-tag span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--mint-dark);
+            display: block;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1)
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(1.3)
+            }
+        }
+        
+        .hero h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(2.2rem, 5vw, 3.2rem);
+            line-height: 1.18;
+            margin-bottom: 18px;
+        }
+        
+        .hero h1 em {
+            font-style: italic;
+            color: var(--blue-deep);
+        }
+        
+        .hero p {
+            font-size: 1rem;
+            color: var(--text-mid);
+            font-weight: 300;
+            max-width: 540px;
+            margin: 0 auto 32px;
+            line-height: 1.7;
+        }
+        
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn-primary {
+            padding: 11px 26px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--blue), var(--blue-deep));
+            color: white;
+            font-size: 0.88rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(74, 158, 221, 0.35);
+            transition: all 0.2s;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(74, 158, 221, 0.45);
+        }
+        
+        .btn-secondary {
+            padding: 11px 26px;
+            border-radius: 10px;
+            background: var(--glass-strong);
+            color: var(--text);
+            font-size: 0.88rem;
+            font-weight: 500;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s;
+        }
+        
+        .btn-secondary:hover {
+            background: white;
+            box-shadow: var(--shadow);
+        }
+        
+        .student-banner {
+            margin: 0 40px 28px;
+            padding: 16px 22px;
+            border-radius: 14px;
+            background: rgba(59, 184, 154, 0.07);
+            border: 1px solid rgba(59, 184, 154, 0.25);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        
+        .student-banner-icon {
+            font-size: 22px;
+        }
+        
+        .student-banner-text {
+            font-size: 0.85rem;
+            color: var(--text-mid);
+            line-height: 1.5;
+        }
+        
+        .student-banner-text strong {
+            color: var(--text);
+        }
+        
+        .stats-bar {
+            display: flex;
+            gap: 0;
+            justify-content: center;
+            max-width: 900px;
+            margin: 0 auto 50px;
+            padding: 0 40px;
+        }
+        
+        .stat-item {
+            flex: 1;
+            text-align: center;
+            padding: 18px 20px;
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+        
+        .stat-item:first-child {
+            border-radius: 14px 0 0 14px;
+        }
+        
+        .stat-item:last-child {
+            border-radius: 0 14px 14px 0;
+        }
+        
+        .stat-item:hover {
+            background: var(--glass-strong);
+        }
+        
+        .stat-val {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.7rem;
+            color: var(--text);
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-soft);
+            font-weight: 500;
+            margin-top: 2px;
+        }
+        
+        .main {
+            max-width: 1160px;
+            margin: 0 auto;
+            padding: 0 40px 80px;
+        }
+        
+        .section-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.5rem;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+        
+        .section-sub {
+            font-size: 0.875rem;
+            color: var(--text-soft);
+            margin-bottom: 22px;
+        }
+        
+        .grants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+            gap: 18px;
+        }
+        
+        .grant-card {
+            background: var(--glass-strong);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.25s;
+            cursor: pointer;
+        }
+        
+        .grant-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+            background: white;
+            border-color: rgba(74, 158, 221, 0.3);
+        }
+        
+        .grant-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 14px;
+        }
+        
+        .grant-badge {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+        
+        .badge-active {
+            background: rgba(59, 184, 154, 0.15);
+            color: var(--mint-dark);
+            border: 1px solid rgba(59, 184, 154, 0.3);
+        }
+        
+        .badge-pending {
+            background: rgba(232, 201, 106, 0.2);
+            color: var(--amber);
+            border: 1px solid rgba(232, 201, 106, 0.4);
+        }
+        
+        .badge-completed {
+            background: rgba(74, 158, 221, 0.15);
+            color: var(--blue-deep);
+            border: 1px solid var(--border);
+        }
+        
+        .grant-amount {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.35rem;
+            color: var(--text);
+        }
+        
+        .grant-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 5px;
+        }
+        
+        .grant-team {
+            font-size: 0.82rem;
+            color: var(--text-soft);
+            margin-bottom: 16px;
+        }
+        
+        .milestones-mini {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+        
+        .ms-dot {
+            flex: 1;
+            height: 5px;
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+        
+        .ms-dot.done {
+            background: var(--mint-dark);
+        }
+        
+        .ms-dot.active {
+            background: var(--gold);
+            animation: shimmer 1.5s infinite;
+        }
+        
+        .ms-dot.pending {
+            background: var(--blue-light);
+        }
+        
+        @keyframes shimmer {
+            0%,
+            100% {
+                opacity: 1
+            }
+            50% {
+                opacity: 0.5
+            }
+        }
+        
+        .grant-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .grant-progress-text {
+            font-size: 0.8rem;
+            color: var(--text-mid);
+        }
+        
+        .grant-progress-text strong {
+            color: var(--text);
+        }
+        
+        .grant-action {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--blue);
+            background: rgba(74, 158, 221, 0.1);
+            padding: 4px 12px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .grant-action:hover {
+            background: rgba(74, 158, 221, 0.2);
+        }
+        
+        .algo {
+            font-size: 0.7rem;
+            color: var(--text-soft);
+            font-weight: 400;
+        }
+        
+        .panel-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(26, 35, 50, 0.35);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        
+        .panel-overlay.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .side-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 440px;
+            max-width: 100vw;
+            background: rgba(250, 248, 244, 0.97);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-left: 1px solid var(--border);
+            box-shadow: -20px 0 60px rgba(45, 127, 196, 0.12);
+            overflow-y: auto;
+            transform: translateX(100%);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 201;
+            padding: 32px;
+        }
+        
+        .side-panel.open {
+            transform: translateX(0);
+        }
+        
+        .panel-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            font-size: 16px;
+            color: var(--text-mid);
+            display: grid;
+            place-items: center;
+            transition: all 0.2s;
+        }
+        
+        .panel-close:hover {
+            background: white;
+            color: var(--text);
+        }
+        
+        .panel-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.4rem;
+            color: var(--text);
+            margin-bottom: 4px;
+            margin-right: 40px;
+        }
+        
+        .panel-sub {
+            font-size: 0.82rem;
+            color: var(--text-soft);
+            margin-bottom: 22px;
+        }
+        
+        .panel-amount-block {
+            background: linear-gradient(135deg, rgba(208, 232, 248, 0.6), rgba(214, 240, 234, 0.4));
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .panel-amount {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2rem;
+            color: var(--text);
+        }
+        
+        .panel-released {
+            font-size: 0.8rem;
+            color: var(--text-soft);
+        }
+        
+        .panel-released strong {
+            color: var(--mint-dark);
+        }
+        
+        .milestones-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        
+        .milestone-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+        
+        .milestone-row.done {
+            background: rgba(59, 184, 154, 0.06);
+            border-color: rgba(59, 184, 154, 0.25);
+        }
+        
+        .milestone-row.current {
+            background: rgba(232, 201, 106, 0.08);
+            border-color: rgba(232, 201, 106, 0.3);
+        }
+        
+        .ms-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            font-size: 14px;
+        }
+        
+        .ms-icon.done {
+            background: rgba(59, 184, 154, 0.15);
+        }
+        
+        .ms-icon.current {
+            background: rgba(232, 201, 106, 0.2);
+        }
+        
+        .ms-icon.pending {
+            background: rgba(74, 158, 221, 0.1);
+        }
+        
+        .ms-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .ms-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+        
+        .ms-date {
+            font-size: 0.75rem;
+            color: var(--text-soft);
+        }
+        
+        .ms-amount {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-mid);
+            white-space: nowrap;
+        }
+        
+        .approve-btn {
+            padding: 5px 11px;
+            border-radius: 7px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: linear-gradient(135deg, var(--blue), var(--blue-deep));
+            white-space: nowrap;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(74, 158, 221, 0.3);
+        }
+        
+        .approve-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(74, 158, 221, 0.4);
+        }
+        
+        .access-denied {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 9px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #c05050;
+            background: rgba(224, 80, 80, 0.07);
+            border: 1px solid rgba(224, 80, 80, 0.18);
+            white-space: nowrap;
+        }
+        
+        .student-readonly-note {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            background: rgba(59, 184, 154, 0.06);
+            border: 1px solid rgba(59, 184, 154, 0.2);
+            font-size: 0.75rem;
+            color: var(--text-soft);
+            margin-top: 4px;
+        }
+        
+        .tx-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .tx-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 18px;
+            border-radius: 12px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+        
+        .tx-row:hover {
+            background: var(--glass-strong);
+            box-shadow: var(--shadow);
+        }
+        
+        .tx-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            font-size: 15px;
+        }
+        
+        .tx-icon.release {
+            background: rgba(59, 184, 154, 0.15);
+        }
+        
+        .tx-icon.fund {
+            background: rgba(74, 158, 221, 0.15);
+        }
+        
+        .tx-icon.vote {
+            background: rgba(232, 201, 106, 0.2);
+        }
+        
+        .tx-info {
+            flex: 1;
+        }
+        
+        .tx-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+        
+        .tx-hash {
+            font-size: 0.75rem;
+            color: var(--text-soft);
+            font-family: monospace;
+        }
+        
+        .tx-amount {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .tx-amount.positive {
+            color: var(--mint-dark);
+        }
+        
+        .tx-amount.neutral {
+            color: var(--blue-deep);
+        }
+        
+        .tx-time {
+            font-size: 0.75rem;
+            color: var(--text-soft);
+            text-align: right;
+        }
+        
+        .dao-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        
+        .vote-card {
+            background: var(--glass-strong);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 22px;
+            transition: all 0.25s;
+        }
+        
+        .vote-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+        
+        .vote-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+        
+        .vote-desc {
+            font-size: 0.8rem;
+            color: var(--text-soft);
+            margin-bottom: 14px;
+            line-height: 1.5;
+        }
+        
+        .vote-bar-wrap {
+            margin-bottom: 12px;
+        }
+        
+        .vote-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-soft);
+            margin-bottom: 5px;
+        }
+        
+        .vote-bar-track {
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(74, 158, 221, 0.15);
+            overflow: hidden;
+        }
+        
+        .vote-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--blue), var(--mint-dark));
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .vote-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .vote-yes {
+            flex: 1;
+            padding: 7px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            background: rgba(59, 184, 154, 0.12);
+            color: var(--mint-dark);
+            border: 1px solid rgba(59, 184, 154, 0.3);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .vote-yes:hover {
+            background: rgba(59, 184, 154, 0.22);
+        }
+        
+        .vote-no {
+            flex: 1;
+            padding: 7px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            background: rgba(255, 100, 100, 0.08);
+            color: #e05050;
+            border: 1px solid rgba(255, 100, 100, 0.2);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .vote-no:hover {
+            background: rgba(255, 100, 100, 0.15);
+        }
+        
+        .vote-readonly {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            color: var(--text-soft);
+            background: rgba(74, 158, 221, 0.05);
+            border: 1px dashed var(--border);
+        }
+        
+        .vote-card.has-voted .vote-bar-fill {
+            opacity: 0.85;
+        }
+        
+        .vote-yes.selected {
+            background: rgba(59, 184, 154, 0.25);
+            color: var(--mint-dark);
+            border-color: rgba(59, 184, 154, 0.55);
+            box-shadow: 0 0 0 2px rgba(59, 184, 154, 0.18);
+            font-weight: 600;
+        }
+        
+        .vote-no.selected {
+            background: rgba(224, 80, 80, 0.18);
+            color: #c04040;
+            border-color: rgba(224, 80, 80, 0.4);
+            box-shadow: 0 0 0 2px rgba(224, 80, 80, 0.12);
+            font-weight: 600;
+        }
+        
+        .vote-pending-note {
+            font-size: 0.72rem;
+            color: var(--amber);
+            text-align: center;
+            padding: 2px 0 0;
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 300;
+            background: rgba(26, 35, 50, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: grid;
+            place-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .modal {
+            background: rgba(250, 248, 244, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 36px;
+            width: 480px;
+            max-width: 90vw;
+            box-shadow: var(--shadow-lg);
+            transform: scale(0.95) translateY(20px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .modal-overlay.open .modal {
+            transform: scale(1) translateY(0);
+        }
+        
+        .modal-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.4rem;
+            color: var(--text);
+            margin-bottom: 22px;
+        }
+        
+        .milestone-builder {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .ms-builder-row {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .ms-builder-row .form-input {
+            flex: 1;
+        }
+        
+        .add-ms-btn {
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            background: rgba(74, 158, 221, 0.1);
+            color: var(--blue-deep);
+            border: 1px dashed rgba(74, 158, 221, 0.4);
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 4px;
+            width: 100%;
+        }
+        
+        .add-ms-btn:hover {
+            background: rgba(74, 158, 221, 0.18);
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 22px;
+        }
+        
+        .wallet-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: 10px;
+            background: rgba(59, 184, 154, 0.1);
+            border: 1px solid rgba(59, 184, 154, 0.25);
+            font-size: 0.8rem;
+            color: var(--mint-dark);
+            font-weight: 500;
+            margin-bottom: 22px;
+        }
+        
+        .wallet-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--mint-dark);
+            animation: pulse 2s infinite;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        
+        .dash-card {
+            background: var(--glass-strong);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            backdrop-filter: blur(16px);
+        }
+        
+        .dash-card-label {
+            font-size: 0.78rem;
+            color: var(--text-soft);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .dash-card-value {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.8rem;
+            color: var(--text);
+        }
+        
+        .dash-card-sub {
+            font-size: 0.78rem;
+            color: var(--text-soft);
+            margin-top: 2px;
+        }
+        
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 6px;
+            height: 80px;
+            margin-top: 12px;
+        }
+        
+        .chart-bar {
+            flex: 1;
+            border-radius: 4px 4px 0 0;
+            background: linear-gradient(180deg, var(--blue), rgba(74, 158, 221, 0.3));
+            cursor: pointer;
+        }
+        
+        .chart-bar:hover {
+            opacity: 0.8;
+        }
+        
+        .responsive-table {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-soft);
+            text-align: left;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        td {
+            font-size: 0.82rem;
+            color: var(--text-mid);
+            padding: 12px 14px;
+            border-bottom: 1px solid rgba(74, 158, 221, 0.08);
+        }
+        
+        tr:hover td {
+            background: rgba(74, 158, 221, 0.04);
+        }
+        
+        .notif {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 500;
+            padding: 14px 20px;
+            border-radius: 12px;
+            background: var(--glass-strong);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-lg);
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(80px) scale(0.95);
+            opacity: 0;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .notif.show {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+        
+        .fade-in {
+            animation: fadeUp 0.45s ease forwards;
+            opacity: 0;
+        }
+        
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(14px)
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+        
+        .s1 {
+            animation-delay: .05s
+        }
+        
+        .s2 {
+            animation-delay: .1s
+        }
+        
+        .s3 {
+            animation-delay: .15s
+        }
+        
+        .s4 {
+            animation-delay: .2s
+        }
+        
+        .s5 {
+            animation-delay: .25s
+        }
+        
+        @media(max-width:700px) {
+            .login-wrap {
+                grid-template-columns: 1fr;
+            }
+            .login-left {
+                display: none;
+            }
+            nav {
+                padding: 14px 20px;
+            }
+            .nav-links {
+                display: none;
+            }
+            .hero,
+            .main {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            .stats-bar {
+                padding: 0 20px;
+                flex-direction: column;
+            }
+            .stat-item:first-child,
+            .stat-item:last-child {
+                border-radius: 0;
+            }
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .side-panel {
+                width: 100vw;
+            }
+            .student-banner {
+                margin: 0 20px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ══════════════ LOGIN ══════════════ -->
+    <div id="login-screen">
+        <div class="login-wrap">
+            <div class="login-left">
+                <div class="login-logo">
+                    <div class="login-logo-icon">🔗</div>
+                    <div class="login-logo-text">GrantFlow</div>
+                </div>
+                <div class="login-tagline">Transparent <em>Grant Funding</em> for Student Projects</div>
+                <div class="login-desc">Blockchain-powered milestone tracking on Algorand. Every fund release, approval, and transaction recorded on-chain for full accountability.</div>
+                <div class="login-features">
+                    <div class="login-feat">
+                        <div class="login-feat-icon">🔒</div>Smart contract escrow — locked until milestone approval</div>
+                    <div class="login-feat">
+                        <div class="login-feat-icon">📊</div>Real-time dashboard for all stakeholders</div>
+                    <div class="login-feat">
+                        <div class="login-feat-icon">🗳️</div>DAO governance for decentralized approvals</div>
+                    <div class="login-feat">
+                        <div class="login-feat-icon">⛓️</div>Immutable on-chain transaction history</div>
+                </div>
+            </div>
+            <div class="login-right">
+                <h2>Welcome back</h2>
+                <p>Select your role and sign in to continue</p>
+                <div class="role-select">
+                    <div class="role-card selected" id="role-student" onclick="selectRole('student')">
+                        <div class="role-emoji">🎓</div>
+                        <div class="role-name">Student</div>
+                        <div class="role-desc">View grants &amp; progress</div>
+                    </div>
+                    <div class="role-card" id="role-organizer" onclick="selectRole('organizer')">
+                        <div class="role-emoji">🏛️</div>
+                        <div class="role-name">Organizer / Donor</div>
+                        <div class="role-desc">Manage &amp; approve funds</div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Email Address</label>
+                    <input class="form-input" id="login-email" type="email" placeholder="you@university.edu" value="student@university.edu" />
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Password</label>
+                    <input class="form-input" id="login-pass" type="password" placeholder="••••••••" value="password" />
+                </div>
+                <button class="login-btn" id="login-submit-btn" onclick="doLogin()">Sign In as Student</button>
+                <div class="login-error" id="login-error">Invalid credentials. Please try again.</div>
+                <div class="demo-hint">
+                    <strong>Demo Credentials</strong><br/> 🎓 Student &nbsp;→&nbsp; <code>student@university.edu</code> / <code>password</code><br/> 🏛️ Organizer →&nbsp; <code>organizer@grantflow.io</code> / <code>admin123</code>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════ APP ══════════════ -->
+    <div id="app-screen">
+        <nav>
+            <div class="logo">
+                <div class="logo-icon">🔗</div>GrantFlow</div>
+            <div class="nav-links">
+                <button class="nav-link active" onclick="showTab('grants')">Grants</button>
+                <button class="nav-link" onclick="showTab('dashboard')">Dashboard</button>
+                <button class="nav-link" onclick="showTab('transactions')">Transactions</button>
+                <button class="nav-link" onclick="showTab('dao')">DAO Voting</button>
+            </div>
+            <div class="nav-right">
+                <div class="role-pill" id="nav-role-pill">
+                    <div class="role-dot"></div><span id="nav-role-label">Student</span></div>
+                <button class="nav-cta" id="nav-create-btn" onclick="openCreateModal()" style="display:none">＋ New Grant</button>
+                <button class="logout-btn" onclick="doLogout()">Sign Out</button>
+            </div>
+        </nav>
+
+        <div class="hero fade-in">
+            <div class="hero-tag"><span></span> Powered by Algorand Blockchain</div>
+            <h1 id="hero-title">Transparent <em>Grant Funding</em><br/>for Student Projects</h1>
+            <p id="hero-desc">Milestone-based fund disbursement with full on-chain transparency.</p>
+            <div class="hero-actions" id="hero-actions"></div>
+        </div>
+
+        <div class="student-banner" id="student-banner" style="display:none">
+            <div class="student-banner-icon">👁️</div>
+            <div class="student-banner-text">
+                <strong>Read-Only Access</strong> — You're signed in as a Student. You can view all grants, milestones, and transactions but <strong>cannot approve milestones, create grants, or cast DAO votes</strong>. Only Organizers &amp; Donors hold
+                those privileges.
+            </div>
+        </div>
+
+        <div class="stats-bar fade-in s1">
+            <div class="stat-item">
+                <div class="stat-val">₳ 248,500</div>
+                <div class="stat-label">Total Funds Allocated</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-val">34</div>
+                <div class="stat-label">Active Grants</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-val">127</div>
+                <div class="stat-label">Milestones Completed</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-val">98.2%</div>
+                <div class="stat-label">Funds Accountability</div>
+            </div>
+        </div>
+
+        <div class="main">
+            <!-- GRANTS TAB -->
+            <div id="tab-grants">
+                <div class="section-title fade-in s2">Active Grants</div>
+                <div class="section-sub fade-in s2">Click any grant to view milestones and fund details</div>
+                <div class="grants-grid" id="grants-grid"></div>
+            </div>
+
+            <!-- DASHBOARD TAB -->
+            <div id="tab-dashboard" style="display:none">
+                <div class="section-title fade-in">Funding Dashboard</div>
+                <div class="section-sub fade-in">Real-time overview of all grant activity</div>
+                <div class="wallet-badge fade-in">
+                    <div class="wallet-dot"></div>Connected: ALGO...4XK2 &nbsp;·&nbsp; Balance: ₳ 12,450</div>
+                <div class="dashboard-grid fade-in">
+                    <div class="dash-card">
+                        <div class="dash-card-label">TOTAL DISBURSED</div>
+                        <div class="dash-card-value">₳ 142,800</div>
+                        <div class="dash-card-sub">+₳ 8,200 this month</div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-card-label">IN ESCROW</div>
+                        <div class="dash-card-value">₳ 105,700</div>
+                        <div class="dash-card-sub">Pending 14 milestones</div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-card-label">MONTHLY RELEASES</div>
+                        <div class="dash-card-value">18</div>
+                        <div class="dash-card-sub">Approvals this month</div>
+                        <div class="chart-bars" id="monthly-chart"></div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-card-label">GRANT SUCCESS RATE</div>
+                        <div class="dash-card-value">89%</div>
+                        <div class="dash-card-sub">Based on milestone completion</div>
+                    </div>
+                </div>
+                <div class="section-title" style="margin-bottom:14px">All Grants Overview</div>
+                <div class="responsive-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Grant Title</th>
+                                <th>Team</th>
+                                <th>Total</th>
+                                <th>Released</th>
+                                <th>Progress</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="grants-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TRANSACTIONS TAB -->
+            <div id="tab-transactions" style="display:none">
+                <div class="section-title fade-in">Transaction Feed</div>
+                <div class="section-sub fade-in">Live on-chain activity across all grants</div>
+                <div class="tx-list" id="tx-list"></div>
+            </div>
+
+            <!-- DAO TAB -->
+            <div id="tab-dao" style="display:none">
+                <div class="section-title fade-in">DAO Governance</div>
+                <div class="section-sub fade-in" id="dao-sub">Vote on milestone approvals and fund release proposals</div>
+                <div class="dao-grid" id="dao-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SIDE PANEL -->
+    <div class="panel-overlay" id="panel-overlay" onclick="closePanel()"></div>
+    <div class="side-panel" id="side-panel">
+        <button class="panel-close" onclick="closePanel()">✕</button>
+        <div id="panel-content"></div>
+    </div>
+
+    <!-- CREATE MODAL -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <div class="modal-title">Create New Grant</div>
+            <div class="form-row"><label class="form-label">Grant Title</label><input class="form-input" id="f-title" placeholder="e.g. AI Health Monitor App" /></div>
+            <div class="form-row"><label class="form-label">Team / Student Name</label><input class="form-input" id="f-team" placeholder="e.g. Team Nova" /></div>
+            <div class="form-row"><label class="form-label">Total Amount (ALGO)</label><input class="form-input" id="f-amount" type="number" placeholder="5000" /></div>
+            <div class="form-row">
+                <label class="form-label">Milestones</label>
+                <div class="milestone-builder" id="ms-builder">
+                    <div class="ms-builder-row"><input class="form-input" placeholder="Milestone name" value="Prototype" /><input class="form-input" style="max-width:100px" placeholder="ALGO" value="1500" /></div>
+                    <div class="ms-builder-row"><input class="form-input" placeholder="Milestone name" value="MVP Launch" /><input class="form-input" style="max-width:100px" placeholder="ALGO" value="2000" /></div>
+                    <div class="ms-builder-row"><input class="form-input" placeholder="Milestone name" value="Final Review" /><input class="form-input" style="max-width:100px" placeholder="ALGO" value="1500" /></div>
+                </div>
+                <button class="add-ms-btn" onclick="addMilestoneRow()">+ Add Milestone</button>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-primary" style="flex:1" onclick="createGrant()">Deploy Smart Contract</button>
+                <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICATION -->
+    <div class="notif" id="notif"><span id="notif-text">Done</span></div>
+
+    <script>
+        // ── AUTH ──
+        const USERS = {
+            'student@university.edu': {
+                pass: 'password',
+                role: 'student',
+                name: 'Alex Chen'
+            },
+            'organizer@grantflow.io': {
+                pass: 'admin123',
+                role: 'organizer',
+                name: 'Dr. Sarah Mills'
+            },
+        };
+        let currentUser = null;
+        let userVotes = {};
+
+        function selectRole(role) {
+            document.getElementById('role-student').className = 'role-card' + (role === 'student' ? ' selected' : '');
+            document.getElementById('role-organizer').className = 'role-card' + (role === 'organizer' ? ' selected organizer' : '');
+            const btn = document.getElementById('login-submit-btn');
+            btn.textContent = role === 'student' ? 'Sign In as Student' : 'Sign In as Organizer / Donor';
+            btn.className = role === 'organizer' ? 'login-btn organizer-btn' : 'login-btn';
+            if (role === 'student') {
+                document.getElementById('login-email').value = 'student@university.edu';
+                document.getElementById('login-pass').value = 'password';
+            } else {
+                document.getElementById('login-email').value = 'organizer@grantflow.io';
+                document.getElementById('login-pass').value = 'admin123';
+            }
+        }
+
+        function doLogin() {
+            const email = document.getElementById('login-email').value.trim();
+            const pass = document.getElementById('login-pass').value;
+            const user = USERS[email];
+            const err = document.getElementById('login-error');
+            if (!user || user.pass !== pass) {
+                err.style.display = 'block';
+                return;
+            }
+            err.style.display = 'none';
+            currentUser = {
+                email,
+                role: user.role,
+                name: user.name
+            };
+            bootApp();
+        }
+
+        function doLogout() {
+            currentUser = null;
+            userVotes = {};
+            document.getElementById('app-screen').style.display = 'none';
+            document.getElementById('login-screen').style.display = 'flex';
+            selectRole('student');
+        }
+
+        function bootApp() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app-screen').style.display = 'block';
+            const isOrg = currentUser.role === 'organizer';
+
+            const pill = document.getElementById('nav-role-pill');
+            pill.className = 'role-pill ' + currentUser.role;
+            document.getElementById('nav-role-label').textContent = isOrg ?
+                currentUser.name + ' · Organizer' : currentUser.name + ' · Student';
+
+            document.getElementById('nav-create-btn').style.display = isOrg ? 'block' : 'none';
+            document.getElementById('student-banner').style.display = isOrg ? 'none' : 'flex';
+
+            if (isOrg) {
+                document.getElementById('hero-title').innerHTML = 'Manage &amp; <em>Approve</em><br/>Student Grant Milestones';
+                document.getElementById('hero-desc').textContent = 'Review milestone submissions, release escrowed funds on approval, and govern grant decisions through the DAO.';
+                document.getElementById('hero-actions').innerHTML =
+                    `<button class="btn-primary" onclick="openCreateModal()">＋ Create New Grant</button>
+       <button class="btn-secondary" onclick="showTab('dao')">DAO Voting →</button>`;
+            } else {
+                document.getElementById('hero-title').innerHTML = 'Transparent <em>Grant Funding</em><br/>for Student Projects';
+                document.getElementById('hero-desc').textContent = 'Track your project\'s grant milestones, funding progress, and on-chain transaction history in real time.';
+                document.getElementById('hero-actions').innerHTML =
+                    `<button class="btn-primary" onclick="showTab('dashboard')">View Dashboard</button>
+       <button class="btn-secondary" onclick="showTab('transactions')">Transactions</button>`;
+            }
+            renderGrants();
+            showTab('grants');
+        }
+
+        const grantsData = [{
+            id: 1,
+            title: "AI Health Monitor App",
+            team: "Team Nova",
+            amount: 8000,
+            released: 5500,
+            status: "active",
+            milestones: [{
+                name: "Requirements & Design",
+                amount: 1500,
+                status: "done",
+                date: "Jan 10"
+            }, {
+                name: "Prototype Build",
+                amount: 2000,
+                status: "done",
+                date: "Feb 5"
+            }, {
+                name: "Beta Testing",
+                amount: 2500,
+                status: "current",
+                date: "Mar 15"
+            }, {
+                name: "Final Deployment",
+                amount: 2000,
+                status: "pending",
+                date: "Apr 20"
+            }]
+        }, {
+            id: 2,
+            title: "Blockchain Supply Chain",
+            team: "DataSync Labs",
+            amount: 12000,
+            released: 4000,
+            status: "active",
+            milestones: [{
+                name: "Architecture Design",
+                amount: 2000,
+                status: "done",
+                date: "Jan 20"
+            }, {
+                name: "Smart Contract Dev",
+                amount: 2000,
+                status: "done",
+                date: "Feb 28"
+            }, {
+                name: "Integration Layer",
+                amount: 3000,
+                status: "current",
+                date: "Mar 22"
+            }, {
+                name: "Frontend Dashboard",
+                amount: 2500,
+                status: "pending",
+                date: "Apr 30"
+            }, {
+                name: "Audit & Launch",
+                amount: 2500,
+                status: "pending",
+                date: "May 20"
+            }]
+        }, {
+            id: 3,
+            title: "AR Campus Navigation",
+            team: "XR Builders",
+            amount: 6500,
+            released: 6500,
+            status: "completed",
+            milestones: [{
+                name: "UX Research",
+                amount: 1000,
+                status: "done",
+                date: "Oct 5"
+            }, {
+                name: "AR Prototype",
+                amount: 2000,
+                status: "done",
+                date: "Nov 2"
+            }, {
+                name: "Campus Mapping",
+                amount: 2000,
+                status: "done",
+                date: "Nov 28"
+            }, {
+                name: "App Release",
+                amount: 1500,
+                status: "done",
+                date: "Dec 15"
+            }]
+        }, {
+            id: 4,
+            title: "EduDAO Platform",
+            team: "Future Ed",
+            amount: 9000,
+            released: 0,
+            status: "pending",
+            milestones: [{
+                name: "Whitepaper & Tokenomics",
+                amount: 2000,
+                status: "pending",
+                date: "Apr 1"
+            }, {
+                name: "DAO Smart Contracts",
+                amount: 3000,
+                status: "pending",
+                date: "May 10"
+            }, {
+                name: "Governance UI",
+                amount: 2500,
+                status: "pending",
+                date: "Jun 15"
+            }, {
+                name: "Launch & Audit",
+                amount: 1500,
+                status: "pending",
+                date: "Jul 1"
+            }]
+        }, {
+            id: 5,
+            title: "Green Energy Tracker",
+            team: "EcoSense",
+            amount: 5000,
+            released: 2500,
+            status: "active",
+            milestones: [{
+                name: "Sensor Integration",
+                amount: 1500,
+                status: "done",
+                date: "Feb 10"
+            }, {
+                name: "Data Pipeline",
+                amount: 1000,
+                status: "done",
+                date: "Feb 25"
+            }, {
+                name: "Dashboard MVP",
+                amount: 1500,
+                status: "current",
+                date: "Mar 18"
+            }, {
+                name: "Public Launch",
+                amount: 1000,
+                status: "pending",
+                date: "Apr 5"
+            }]
+        }, {
+            id: 6,
+            title: "Mental Health Chatbot",
+            team: "MindBridge",
+            amount: 7000,
+            released: 3000,
+            status: "active",
+            milestones: [{
+                name: "Research & Ethics",
+                amount: 1000,
+                status: "done",
+                date: "Jan 15"
+            }, {
+                name: "NLP Model Training",
+                amount: 2000,
+                status: "done",
+                date: "Feb 20"
+            }, {
+                name: "Frontend + Integrations",
+                amount: 2000,
+                status: "current",
+                date: "Mar 25"
+            }, {
+                name: "Clinical Review",
+                amount: 2000,
+                status: "pending",
+                date: "Apr 30"
+            }]
+        }, ];
+        const txData = [{
+            type: "release",
+            icon: "💸",
+            title: "Milestone Released: Beta Testing",
+            project: "AI Health Monitor",
+            amount: "+₳ 2,500",
+            hash: "TXN-a4f8...2e9c",
+            time: "2 min ago"
+        }, {
+            type: "fund",
+            icon: "🏦",
+            title: "Grant Funded by Sponsor",
+            project: "EduDAO Platform",
+            amount: "+₳ 9,000",
+            hash: "TXN-b9d1...7a3f",
+            time: "18 min ago"
+        }, {
+            type: "vote",
+            icon: "🗳️",
+            title: "DAO Vote Passed — Milestone Approved",
+            project: "Blockchain Supply Chain",
+            amount: "₳ 3,000",
+            hash: "TXN-c2e4...1b6d",
+            time: "1 hr ago"
+        }, {
+            type: "release",
+            icon: "💸",
+            title: "Milestone Released: Data Pipeline",
+            project: "Green Energy Tracker",
+            amount: "+₳ 1,000",
+            hash: "TXN-d7a3...9c1e",
+            time: "3 hr ago"
+        }, {
+            type: "fund",
+            icon: "🏦",
+            title: "Escrow Contract Deployed",
+            project: "Mental Health Chatbot",
+            amount: "₳ 7,000",
+            hash: "TXN-e3f7...4d8b",
+            time: "6 hr ago"
+        }, {
+            type: "release",
+            icon: "💸",
+            title: "Milestone Released: NLP Model",
+            project: "Mental Health Chatbot",
+            amount: "+₳ 2,000",
+            hash: "TXN-f1c9...0a2e",
+            time: "8 hr ago"
+        }, {
+            type: "vote",
+            icon: "🗳️",
+            title: "DAO Vote Cast: 12 members voted",
+            project: "AR Campus Navigation",
+            amount: "₳ 1,500",
+            hash: "TXN-g8e2...5c7d",
+            time: "1 day ago"
+        }, ];
+        const daoData = [{
+            title: "Release Beta Testing Funds",
+            desc: "Team Nova requests ₳ 2,500 release for successful beta with 500 users onboarded.",
+            yes: 8,
+            total: 11
+        }, {
+            title: "Approve Integration Layer Milestone",
+            desc: "DataSync Labs completed API integration. Requesting ₳ 3,000 disbursement.",
+            yes: 6,
+            total: 10
+        }, {
+            title: "Add Emergency Milestone Buffer",
+            desc: "MindBridge requests adding a ₳ 500 ethics review buffer milestone.",
+            yes: 4,
+            total: 9
+        }, {
+            title: "Grant Extension — EduDAO Platform",
+            desc: "Future Ed requests 30-day extension for DAO contract deployment.",
+            yes: 7,
+            total: 12
+        }, ];
+
+        function renderGrants() {
+            document.getElementById('grants-grid').innerHTML = grantsData.map((g, i) => {
+                const done = g.milestones.filter(m => m.status === 'done').length;
+                const pct = Math.round((g.released / g.amount) * 100);
+                const dots = g.milestones.map(m => `<div class="ms-dot ${m.status}"></div>`).join('');
+                const bm = {
+                    active: 'badge-active',
+                    pending: 'badge-pending',
+                    completed: 'badge-completed'
+                };
+                const lm = {
+                    active: 'Active',
+                    pending: 'Pending',
+                    completed: 'Completed'
+                };
+                return `<div class="grant-card fade-in s${(i%5)+1}" onclick="openGrant(${g.id})">
+      <div class="grant-header">
+        <span class="grant-badge ${bm[g.status]}">${lm[g.status]}</span>
+        <span class="grant-amount">₳ ${g.amount.toLocaleString()} <span class="algo">ALGO</span></span>
+      </div>
+      <div class="grant-title">${g.title}</div>
+      <div class="grant-team">👥 ${g.team} · ${done}/${g.milestones.length} milestones</div>
+      <div class="milestones-mini">${dots}</div>
+      <div class="grant-footer">
+        <div class="grant-progress-text"><strong>${pct}%</strong> released (₳ ${g.released.toLocaleString()})</div>
+        <button class="grant-action">View →</button>
+      </div></div>`;
+            }).join('');
+        }
+
+        function renderTx() {
+            document.getElementById('tx-list').innerHTML = txData.map(t => `
+    <div class="tx-row fade-in">
+      <div class="tx-icon ${t.type}">${t.icon}</div>
+      <div class="tx-info"><div class="tx-title">${t.title}</div><div class="tx-hash">${t.project} · ${t.hash}</div></div>
+      <div><div class="tx-amount ${t.type==='release'?'positive':'neutral'}">${t.amount}</div><div class="tx-time">${t.time}</div></div>
+    </div>`).join('');
+        }
+
+        function renderDAO() {
+            const isOrg = currentUser && currentUser.role === 'organizer';
+            document.getElementById('dao-sub').textContent = isOrg ?
+                'You can change your selection freely — only your final confirmed vote counts' :
+                'View active governance proposals — voting is restricted to Organizers & Donors';
+            document.getElementById('dao-grid').innerHTML = daoData.map((d, i) => {
+                const pct = Math.round((d.yes / d.total) * 100);
+                const voteKey = currentUser ? `${currentUser.email}-${i}` : null;
+                const voteRecord = voteKey ? userVotes[voteKey] : null;
+                const myChoice = voteRecord ? voteRecord.choice : null;
+
+                let actions;
+                if (!isOrg) {
+                    actions = `<div class="vote-readonly">🔒 Voting restricted to Organizers &amp; Donors</div>`;
+                } else {
+                    const yClass = `vote-yes${myChoice==='yes'?' selected':''}`;
+                    const nClass = `vote-no${myChoice==='no'?' selected':''}`;
+                    actions = `<div class="vote-actions">
+        <button class="${yClass}" onclick="castVote(${i},'yes')">✓ Approve</button>
+        <button class="${nClass}" onclick="castVote(${i},'no')">✗ Reject</button>
+      </div>`;
+                }
+
+                const cardClass = myChoice ? 'vote-card has-voted' : 'vote-card';
+                return `<div class="${cardClass} fade-in s${i+1}">
+      <div class="vote-title">${d.title}</div>
+      <div class="vote-desc">${d.desc}</div>
+      <div class="vote-bar-wrap">
+        <div class="vote-labels"><span>For: ${d.yes} · Against: ${d.total - d.yes}</span><span>${pct}% · ${d.total} total</span></div>
+        <div class="vote-bar-track"><div class="vote-bar-fill" style="width:${pct}%"></div></div>
+      </div>${actions}</div>`;
+            }).join('');
+        }
+
+        function renderDashboard() {
+            document.getElementById('grants-table-body').innerHTML = grantsData.map(g => {
+                const done = g.milestones.filter(m => m.status === 'done').length;
+                return `<tr>
+      <td><strong style="color:var(--text)">${g.title}</strong></td>
+      <td>${g.team}</td><td>₳ ${g.amount.toLocaleString()}</td>
+      <td style="color:var(--mint-dark)">₳ ${g.released.toLocaleString()}</td>
+      <td>${done}/${g.milestones.length}</td>
+      <td><span class="grant-badge badge-${g.status}" style="font-size:0.7rem">${g.status}</span></td></tr>`;
+            }).join('');
+            document.getElementById('monthly-chart').innerHTML = [35, 55, 40, 70, 60, 80, 65].map(h => `<div class="chart-bar" style="height:${h}px"></div>`).join('');
+        }
+
+        function openGrant(id) {
+            const g = grantsData.find(x => x.id === id);
+            const pct = Math.round((g.released / g.amount) * 100);
+            const isOrg = currentUser && currentUser.role === 'organizer';
+            const msHtml = g.milestones.map((m, i) => {
+                let action = '';
+                if (m.status === 'current') {
+                    action = isOrg ?
+                        `<button class="approve-btn" onclick="approveMilestone(${id},${i})">Approve &amp; Release</button>` :
+                        `<span class="access-denied">🔒 Organizer only</span>`;
+                }
+                return `<div class="milestone-row ${m.status}">
+      <div class="ms-icon ${m.status}">${m.status==='done'?'✓':m.status==='current'?'⏳':'○'}</div>
+      <div class="ms-info"><div class="ms-name">${m.name}</div><div class="ms-date">${m.date}</div></div>
+      <div class="ms-amount">₳ ${m.amount.toLocaleString()}</div>
+      ${action}</div>`;
+            }).join('');
+            const roNote = !isOrg ?
+                `<div class="student-readonly-note">👁️ Read-only mode — only Organizers &amp; Donors can approve milestones and release funds.</div>` :
+                '';
+            document.getElementById('panel-content').innerHTML = `
+    <div class="panel-title">${g.title}</div>
+    <div class="panel-sub">👥 ${g.team} · Smart Contract: ALGO...${(g.id*1337).toString(16).toUpperCase()}</div>
+    <div class="panel-amount-block">
+      <div>
+        <div style="font-size:0.75rem;color:var(--text-soft);margin-bottom:4px">GRANT TOTAL</div>
+        <div class="panel-amount">₳ ${g.amount.toLocaleString()}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="panel-released">Released: <strong>₳ ${g.released.toLocaleString()}</strong></div>
+        <div class="panel-released">Escrow: <strong style="color:var(--blue)">₳ ${(g.amount-g.released).toLocaleString()}</strong></div>
+        <div style="font-size:1.2rem;font-weight:600;color:var(--text);margin-top:4px">${pct}%</div>
+      </div>
+    </div>
+    <div style="font-size:0.82rem;font-weight:600;color:var(--text-mid);margin-bottom:10px">MILESTONES</div>
+    <div class="milestones-list">${msHtml}</div>
+    ${roNote}
+    <div style="font-size:0.75rem;color:var(--text-soft);padding:12px;background:rgba(74,158,221,0.06);border-radius:10px;border:1px solid var(--border);margin-top:10px">
+      🔒 Funds held in smart contract escrow. Released automatically upon Organizer / DAO approval of each milestone.
+    </div>`;
+            document.getElementById('panel-overlay').classList.add('open');
+            document.getElementById('side-panel').classList.add('open');
+        }
+
+        function closePanel() {
+            document.getElementById('panel-overlay').classList.remove('open');
+            document.getElementById('side-panel').classList.remove('open');
+        }
+
+        function approveMilestone(grantId, msIdx) {
+            if (!currentUser || currentUser.role !== 'organizer') {
+                notify('🚫 Access denied — Organizers only');
+                return;
+            }
+            const g = grantsData.find(x => x.id === grantId);
+            const ms = g.milestones[msIdx];
+            ms.status = 'done';
+            g.released += ms.amount;
+            const next = g.milestones[msIdx + 1];
+            if (next) next.status = 'current';
+            else g.status = 'completed';
+            openGrant(grantId);
+            renderGrants();
+            notify(`✅ ₳ ${ms.amount.toLocaleString()} released for "${ms.name}"`);
+        }
+
+        function showTab(tab) {
+            ['grants', 'dashboard', 'transactions', 'dao'].forEach(t => {
+                document.getElementById('tab-' + t).style.display = t === tab ? 'block' : 'none';
+            });
+            document.querySelectorAll('.nav-link').forEach((b, i) => {
+                b.classList.toggle('active', ['grants', 'dashboard', 'transactions', 'dao'][i] === tab);
+            });
+            if (tab === 'dashboard') renderDashboard();
+            if (tab === 'transactions') renderTx();
+            if (tab === 'dao') renderDAO();
+        }
+
+        function openCreateModal() {
+            if (!currentUser || currentUser.role !== 'organizer') {
+                notify('🚫 Only Organizers can create grants');
+                return;
+            }
+            document.getElementById('modal-overlay').classList.add('open');
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('open');
+        }
+        document.getElementById('modal-overlay').addEventListener('click', e => {
+            if (e.target === document.getElementById('modal-overlay')) closeModal();
+        });
+
+        function addMilestoneRow() {
+            const r = document.createElement('div');
+            r.className = 'ms-builder-row';
+            r.innerHTML = `<input class="form-input" placeholder="Milestone name"/><input class="form-input" style="max-width:100px" placeholder="ALGO"/>`;
+            document.getElementById('ms-builder').appendChild(r);
+        }
+
+        function createGrant() {
+            const title = document.getElementById('f-title').value || 'New Grant';
+            const team = document.getElementById('f-team').value || 'Student Team';
+            const amount = parseInt(document.getElementById('f-amount').value) || 5000;
+            const milestones = Array.from(document.querySelectorAll('#ms-builder .ms-builder-row')).map((r, i) => {
+                const inp = r.querySelectorAll('input');
+                return {
+                    name: inp[0].value || `Milestone ${i+1}`,
+                    amount: parseInt(inp[1].value) || 1000,
+                    status: i === 0 ? 'current' : 'pending',
+                    date: 'TBD'
+                };
+            });
+            grantsData.unshift({
+                id: grantsData.length + 1,
+                title,
+                team,
+                amount,
+                released: 0,
+                status: 'active',
+                milestones
+            });
+            renderGrants();
+            closeModal();
+            notify(`🚀 Grant "${title}" deployed to Algorand`);
+        }
+
+        function castVote(idx, type) {
+            if (!currentUser || currentUser.role !== 'organizer') {
+                notify('🚫 Voting restricted to Organizers & Donors');
+                return;
+            }
+            const voteKey = `${currentUser.email}-${idx}`;
+            const prev = userVotes[voteKey] ? userVotes[voteKey].choice : null;
+
+            if (prev === type) {
+                return;
+            }
+
+            if (prev === 'yes') daoData[idx].yes = Math.max(0, daoData[idx].yes - 1);
+
+            if (type === 'yes') daoData[idx].yes++;
+
+            userVotes[voteKey] = {
+                choice: type
+            };
+            renderDAO();
+
+            const switched = prev && prev !== type;
+            notify(switched ?
+                `🔄 Vote changed to: ${type==='yes'?'Approve':'Reject'}` :
+                `🗳️ Vote recorded: ${type==='yes'?'Approve':'Reject'}`);
+        }
+
+        function notify(msg) {
+            document.getElementById('notif-text').textContent = msg;
+            const el = document.getElementById('notif');
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 3500);
+        }
+    </script>
+</body>
+
+</html>
