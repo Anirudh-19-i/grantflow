@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+__pycache__/
+
+# Environment & Secrets (VITAL)
+.env
+secrets.py
+*.keys
+
+# OS files
+.DS_Store
+Thumbs.db
